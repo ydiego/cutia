@@ -4,47 +4,52 @@ import { Shield, Globe, Code2, Sparkles, Layers, MonitorPlay } from "lucide-reac
 import { motion } from "motion/react";
 import { useTranslation } from "@i18next-toolkit/react";
 
-const FEATURES = [
-	{
-		icon: Sparkles,
-		title: "AI First",
-		description:
-			"Powered by AI to streamline your editing workflow. Generate images, transcribe audio, and create captions — all built in.",
-	},
-	{
-		icon: Shield,
-		title: "Privacy First",
-		description:
-			"Your files never leave your device. All processing happens locally in your browser — no uploads, no servers.",
-	},
-	{
-		icon: Globe,
-		title: "Works Everywhere",
-		description:
-			"No installation needed. Open your browser on any platform and start editing right away.",
-	},
-	{
-		icon: Code2,
-		title: "Open Source",
-		description:
-			"Fully open source and community-driven. Inspect the code, contribute, or fork it for your needs.",
-	},
-	{
-		icon: Layers,
-		title: "Multi-track Timeline",
-		description:
-			"Professional timeline with support for video, audio, text, and sticker tracks. Drag, trim, and split with ease.",
-	},
-	{
-		icon: MonitorPlay,
-		title: "Export Anywhere",
-		description:
-			"Export your projects in MP4 or WebM format with adjustable quality settings.",
-	},
-];
-
 export function Features() {
 	const { t } = useTranslation();
+	const features = [
+		{
+			icon: Sparkles,
+			title: t("AI First"),
+			description: t(
+				"Powered by AI to streamline your editing workflow. Generate images, transcribe audio, and create captions — all built in.",
+			),
+		},
+		{
+			icon: Shield,
+			title: t("Privacy First"),
+			description: t(
+				"Your files never leave your device. All processing happens locally in your browser — no uploads, no servers.",
+			),
+		},
+		{
+			icon: Globe,
+			title: t("Works Everywhere"),
+			description: t(
+				"No installation needed. Open your browser on any platform and start editing right away.",
+			),
+		},
+		{
+			icon: Code2,
+			title: t("Open Source"),
+			description: t(
+				"Fully open source and community-driven. Inspect the code, contribute, or fork it for your needs.",
+			),
+		},
+		{
+			icon: Layers,
+			title: t("Multi-track Timeline"),
+			description: t(
+				"Professional timeline with support for video, audio, text, and sticker tracks. Drag, trim, and split with ease.",
+			),
+		},
+		{
+			icon: MonitorPlay,
+			title: t("Export Anywhere"),
+			description: t(
+				"Export your projects in MP4 or WebM format with adjustable quality settings.",
+			),
+		},
+	] as const;
 
 	return (
 		<section id="features" className="relative px-4 py-24 md:py-32">
@@ -57,15 +62,17 @@ export function Features() {
 					transition={{ duration: 0.6, ease: "easeOut" }}
 				>
 					<h2 className="mb-4 text-3xl font-bold tracking-tight md:text-4xl">
-						{t('Everything you need to edit')}
+						{t("Everything you need to edit")}
 					</h2>
 					<p className="text-muted-foreground mx-auto max-w-2xl text-lg">
-						{t('A focused set of tools designed for clarity and speed. No feature bloat — just what matters.')}
+						{t(
+							"A focused set of tools designed for clarity and speed. No feature bloat — just what matters.",
+						)}
 					</p>
 				</motion.div>
 
 				<div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-					{FEATURES.map((feature, index) => (
+					{features.map((feature, index) => (
 						<motion.div
 							key={feature.title}
 							className="group rounded-2xl border border-border/50 bg-card/50 p-6 backdrop-blur-sm transition-colors hover:border-border hover:bg-card"
@@ -86,9 +93,9 @@ export function Features() {
 							>
 								<feature.icon className="size-5 text-foreground/70" />
 							</motion.div>
-							<h3 className="mb-2 text-lg font-semibold">{t(feature.title)}</h3>
+							<h3 className="mb-2 text-lg font-semibold">{feature.title}</h3>
 							<p className="text-muted-foreground text-sm leading-relaxed">
-								{t(feature.description)}
+								{feature.description}
 							</p>
 						</motion.div>
 					))}
