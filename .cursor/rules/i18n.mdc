@@ -1,0 +1,67 @@
+---
+description: i18n rules and usage - @i18next-toolkit
+globs: "apps/web/src/**/*.{ts,tsx}"
+alwaysApply: true
+---
+
+# Internationalization (i18n)
+
+The project uses [@i18next-toolkit](https://github.com/moonrailgun/i18next-toolkit). All user-facing copy must go through translation.
+
+## Setup
+
+- **Init**: `apps/web/src/lib/i18n.ts`
+- **Provider**: `apps/web/src/components/providers/i18n-provider.tsx` (mounted in layout)
+- **Config**: `apps/web/.i18next-toolkitrc.json`
+- **Locales**: `apps/web/public/locales/{en,zh}/translation.json`
+
+## Usage
+
+### In React components
+
+```typescript
+import { useTranslation } from "@i18next-toolkit/react";
+
+function MyComponent() {
+  const { t } = useTranslation();
+  return <span>{t("User-facing text")}</span>;
+}
+```
+
+Interpolation:
+
+```typescript
+t("Hello {{name}}", { name: user.name });
+t("Generated {{count}} image(s)", { count: results.length });
+```
+
+### Outside React (stores, utilities, toast)
+
+```typescript
+import { i18next } from "@i18next-toolkit/react";
+
+toast.error(i18next.t("Failed to save sound"));
+```
+
+Use `i18next.t()` when `useTranslation()` is not available (e.g. Zustand stores, event handlers, utilities).
+
+### Language switching
+
+```typescript
+import { setLanguage } from "@i18next-toolkit/react";
+
+setLanguage("zh");
+```
+
+## Workflow
+
+1. Write copy with `t("...")` or `i18next.t("...")` using the source string as the key.
+2. Run `bun run translation:extract` in `apps/web` to extract and merge keys into `public/locales/en/translation.json`.
+3. Add Chinese translations in `public/locales/zh/translation.json` for new keys.
+
+## Rules
+
+- Never hardcode user-facing copy in components or stores.
+- Use `t("…")` in React components; use `i18next.t("…")` outside React.
+- Keep translation keys identical to the default (en) string for extractor compatibility.
+- After adding new `t()` / `i18next.t()` calls, run `translation:extract` and update zh translations.
