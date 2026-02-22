@@ -1,4 +1,4 @@
-export const SITE_URL = "https://cutia.app";
+export const SITE_URL = "https://cutia.msgbyte.com";
 
 export const SITE_INFO = {
 	title: "Cutia",

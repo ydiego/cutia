@@ -65,10 +65,10 @@ export default function PrivacyPage() {
 						<p className="mt-4">
 							Questions? Email us at{" "}
 							<a
-								href="mailto:oss@cutia.app"
+								href="mailto:moonrailgun@gmail.com"
 								className="text-primary hover:underline"
 							>
-								oss@cutia.app
+								moonrailgun@gmail.com
 							</a>
 						</p>
 					</AccordionContent>
@@ -201,9 +201,8 @@ export default function PrivacyPage() {
 			<section className="flex flex-col gap-3">
 				<h2 className="text-2xl font-semibold">Open Source Transparency</h2>
 				<p>
-					Cutia is completely open source. You can review our code, see
-					exactly how we handle data, and even self-host the application if you
-					prefer.
+					Cutia is completely open source. You can review our code, see exactly
+					how we handle data, and even self-host the application if you prefer.
 				</p>
 				<p>
 					View our source code on{" "}
@@ -234,10 +233,10 @@ export default function PrivacyPage() {
 					</a>
 					, email us at{" "}
 					<a
-						href="mailto:oss@cutia.app"
+						href="mailto:moonrailgun@gmail.com"
 						className="text-primary hover:underline"
 					>
-						oss@cutia.app
+						moonrailgun@gmail.com
 					</a>
 					, or reach out on{" "}
 					<a

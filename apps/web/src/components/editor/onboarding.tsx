@@ -59,7 +59,7 @@ export function Onboarding() {
 							<Title title={getStepTitle()} />
 							<Description description={t("There's still a ton of things to do to make this editor amazing.")} />
 							<Description description={t("A lot of features are still missing. We're working hard to build them out!")} />
-							<Description description={t("If you're curious, check out our roadmap [here](https://cutia.app/roadmap)")} />
+							<Description description={t("If you're curious, check out our roadmap [here](https://cutia.msgbyte.com/roadmap)")} />
 						</div>
 						<NextButton onClick={handleNext}>{t('Next')}</NextButton>
 					</div>

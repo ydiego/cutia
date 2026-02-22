@@ -68,10 +68,10 @@ export default function TermsPage() {
 						<p className="mt-4">
 							Questions? Email us at{" "}
 							<a
-								href="mailto:oss@cutia.app"
+								href="mailto:moonrailgun@gmail.com"
 								className="text-primary hover:underline"
 							>
-								oss@cutia.app
+								moonrailgun@gmail.com
 							</a>
 						</p>
 					</AccordionContent>
@@ -81,11 +81,11 @@ export default function TermsPage() {
 			<section className="flex flex-col gap-3">
 				<h2 className="text-2xl font-semibold">Your Content, Your Rights</h2>
 				<p>
-					<strong>You own everything you create.</strong> Cutia processes
-					basic editing locally on your device. For AI features, content is
-					encrypted before upload and we cannot access your original files. We
-					make no claims to ownership, licensing, or rights over your videos,
-					projects, or any content you create using Cutia.
+					<strong>You own everything you create.</strong> Cutia processes basic
+					editing locally on your device. For AI features, content is encrypted
+					before upload and we cannot access your original files. We make no
+					claims to ownership, licensing, or rights over your videos, projects,
+					or any content you create using Cutia.
 				</p>
 				<ul className="list-disc space-y-2 pl-6">
 					<li>
@@ -110,14 +110,12 @@ export default function TermsPage() {
 					</li>
 					<li>Use Cutia for client work and paid projects</li>
 					<li>Share and distribute videos created with Cutia</li>
-					<li>
-						Modify and distribute the Cutia software (under MIT license)
-					</li>
+					<li>Modify and distribute the Cutia software (under MIT license)</li>
 				</ul>
 				<p>
-					<strong>What we ask:</strong> Don't use Cutia for illegal
-					activities, harassment, or creating harmful content. Be respectful of
-					others and follow applicable laws.
+					<strong>What we ask:</strong> Don't use Cutia for illegal activities,
+					harassment, or creating harmful content. Be respectful of others and
+					follow applicable laws.
 				</p>
 			</section>
 
@@ -191,8 +189,8 @@ export default function TermsPage() {
 			<section className="flex flex-col gap-3">
 				<h2 className="text-2xl font-semibold">Third-Party Content</h2>
 				<p>
-					When using Cutia, make sure you have the right to use any content
-					you import:
+					When using Cutia, make sure you have the right to use any content you
+					import:
 				</p>
 				<ul className="list-disc space-y-2 pl-6">
 					<li>Only upload content you own or have permission to use</li>
@@ -208,9 +206,7 @@ export default function TermsPage() {
 
 			<section className="flex flex-col gap-3">
 				<h2 className="text-2xl font-semibold">Limitations and Liability</h2>
-				<p>
-					Cutia is provided free of charge. To the extent permitted by law:
-				</p>
+				<p>Cutia is provided free of charge. To the extent permitted by law:</p>
 				<ul className="list-disc space-y-2 pl-6">
 					<li>We're not liable for any loss of data or content</li>
 					<li>
@@ -264,10 +260,10 @@ export default function TermsPage() {
 					</a>
 					, email us at{" "}
 					<a
-						href="mailto:oss@cutia.app"
+						href="mailto:moonrailgun@gmail.com"
 						className="text-primary hover:underline"
 					>
-						oss@cutia.app
+						moonrailgun@gmail.com
 					</a>
 					, or reach out on{" "}
 					<a
