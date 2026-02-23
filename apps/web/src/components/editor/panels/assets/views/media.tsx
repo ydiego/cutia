@@ -175,6 +175,23 @@ export function MediaView() {
 		});
 	};
 
+	const handleExportClip = ({ item }: { item: MediaAsset }) => {
+		try {
+			const downloadUrl = URL.createObjectURL(item.file);
+			const linkElement = document.createElement("a");
+			linkElement.href = downloadUrl;
+			linkElement.download = item.file.name || item.name;
+			document.body.append(linkElement);
+			linkElement.click();
+			linkElement.remove();
+			setTimeout(() => URL.revokeObjectURL(downloadUrl), 0);
+			toast.success(t("Clip downloaded"));
+		} catch (error) {
+			console.error("Failed to export clip:", error);
+			toast.error(t("Failed to download clip"));
+		}
+	};
+
 	const addElementAtTime = ({
 		asset,
 		startTime,
@@ -445,6 +462,7 @@ export function MediaView() {
 								items={filteredMediaItems}
 								renderPreview={renderPreview}
 								onRemove={handleRemove}
+								onExportClip={handleExportClip}
 								onAddToTimeline={addElementAtTime}
 								onSelect={handleSelectMedia}
 								selectedMediaId={selectedMediaId}
@@ -456,6 +474,7 @@ export function MediaView() {
 								items={filteredMediaItems}
 								renderPreview={renderCompactPreview}
 								onRemove={handleRemove}
+								onExportClip={handleExportClip}
 								onAddToTimeline={addElementAtTime}
 								onSelect={handleSelectMedia}
 								selectedMediaId={selectedMediaId}
@@ -517,10 +536,12 @@ function MediaItemWithContextMenu({
 	item,
 	children,
 	onRemove,
+	onExportClip,
 }: {
 	item: MediaAsset;
 	children: React.ReactNode;
 	onRemove: ({ event, id }: { event: React.MouseEvent; id: string }) => void;
+	onExportClip: ({ item }: { item: MediaAsset }) => void;
 }) {
 	const { t } = useTranslation();
 
@@ -528,7 +549,9 @@ function MediaItemWithContextMenu({
 		<ContextMenu>
 			<ContextMenuTrigger>{children}</ContextMenuTrigger>
 			<ContextMenuContent>
-				<ContextMenuItem>{t("Export clips")}</ContextMenuItem>
+				<ContextMenuItem onClick={() => onExportClip({ item })}>
+					{t("Export clips")}
+				</ContextMenuItem>
 				<ContextMenuItem
 					variant="destructive"
 					onClick={(event) => onRemove({ event, id: item.id })}
@@ -544,6 +567,7 @@ function GridView({
 	items,
 	renderPreview,
 	onRemove,
+	onExportClip,
 	onAddToTimeline,
 	onSelect,
 	selectedMediaId,
@@ -553,6 +577,7 @@ function GridView({
 	items: MediaAsset[];
 	renderPreview: (item: MediaAsset) => React.ReactNode;
 	onRemove: ({ event, id }: { event: React.MouseEvent; id: string }) => void;
+	onExportClip: ({ item }: { item: MediaAsset }) => void;
 	onAddToTimeline: ({
 		asset,
 		startTime,
@@ -574,7 +599,11 @@ function GridView({
 		>
 			{items.map((item) => (
 				<div key={item.id} ref={(el) => registerElement(item.id, el)}>
-					<MediaItemWithContextMenu item={item} onRemove={onRemove}>
+					<MediaItemWithContextMenu
+						item={item}
+						onRemove={onRemove}
+						onExportClip={onExportClip}
+					>
 						<DraggableItem
 							name={item.name}
 							preview={renderPreview(item)}
@@ -606,6 +635,7 @@ function ListView({
 	items,
 	renderPreview,
 	onRemove,
+	onExportClip,
 	onAddToTimeline,
 	onSelect,
 	selectedMediaId,
@@ -615,6 +645,7 @@ function ListView({
 	items: MediaAsset[];
 	renderPreview: (item: MediaAsset) => React.ReactNode;
 	onRemove: ({ event, id }: { event: React.MouseEvent; id: string }) => void;
+	onExportClip: ({ item }: { item: MediaAsset }) => void;
 	onAddToTimeline: ({
 		asset,
 		startTime,
@@ -631,7 +662,11 @@ function ListView({
 		<div className="space-y-1">
 			{items.map((item) => (
 				<div key={item.id} ref={(el) => registerElement(item.id, el)}>
-					<MediaItemWithContextMenu item={item} onRemove={onRemove}>
+					<MediaItemWithContextMenu
+						item={item}
+						onRemove={onRemove}
+						onExportClip={onExportClip}
+					>
 						<DraggableItem
 							name={item.name}
 							preview={renderPreview(item)}
