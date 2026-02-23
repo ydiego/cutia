@@ -16,7 +16,14 @@ import { EditableTimecode } from "@/components/editable-timecode";
 import { invokeAction } from "@/lib/actions";
 import { Button } from "@/components/ui/button";
 import {
+	DropdownMenu,
+	DropdownMenuContent,
+	DropdownMenuItem,
+	DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import {
 	FullScreenIcon,
+	MoreHorizontalIcon,
 	MusicNote03Icon,
 	PauseIcon,
 	PlayIcon,
@@ -25,6 +32,7 @@ import { HugeiconsIcon } from "@hugeicons/react";
 import { useMediaPreviewStore } from "@/stores/media-preview-store";
 import type { MediaAsset } from "@/types/assets";
 import { cn } from "@/utils/ui";
+import { useTranslation } from "@i18next-toolkit/react";
 
 function usePreviewSize() {
 	const editor = useEditor();
@@ -184,6 +192,48 @@ function AssetPreviewPlayer({ asset }: { asset: MediaAsset }) {
 	return null;
 }
 
+function exportCurrentFrame({
+	editor,
+}: {
+	editor: ReturnType<typeof useEditor>;
+}) {
+	const renderTree = editor.renderer.getRenderTree();
+	if (!renderTree) return;
+
+	const activeProject = editor.project.getActive();
+	if (!activeProject) return;
+
+	const { width, height } = activeProject.settings.canvasSize;
+	const fps = activeProject.settings.fps;
+	const currentTime = editor.playback.getCurrentTime();
+
+	const renderer = new CanvasRenderer({ width, height, fps });
+	const tempCanvas = document.createElement("canvas");
+	tempCanvas.width = width;
+	tempCanvas.height = height;
+
+	renderer
+		.renderToCanvas({
+			node: renderTree,
+			time: currentTime,
+			targetCanvas: tempCanvas,
+		})
+		.then(() => {
+			tempCanvas.toBlob((blob) => {
+				if (!blob) return;
+
+				const url = URL.createObjectURL(blob);
+				const a = document.createElement("a");
+				a.href = url;
+				a.download = `${activeProject.metadata.name}-frame.png`;
+				document.body.appendChild(a);
+				a.click();
+				document.body.removeChild(a);
+				URL.revokeObjectURL(url);
+			}, "image/png");
+		});
+}
+
 function PreviewToolbar({
 	isFullscreen,
 	onToggleFullscreen,
@@ -191,6 +241,7 @@ function PreviewToolbar({
 	isFullscreen: boolean;
 	onToggleFullscreen: () => void;
 }) {
+	const { t } = useTranslation();
 	const editor = useEditor();
 	const isPlaying = editor.playback.getIsPlaying();
 	const currentTime = editor.playback.getCurrentTime();
@@ -228,7 +279,7 @@ function PreviewToolbar({
 				<HugeiconsIcon icon={isPlaying ? PauseIcon : PlayIcon} />
 			</Button>
 
-			<div className="justify-self-end">
+			<div className="flex items-center gap-1 justify-self-end">
 				<Button
 					variant="text"
 					size="icon"
@@ -239,6 +290,27 @@ function PreviewToolbar({
 				>
 					<HugeiconsIcon icon={FullScreenIcon} />
 				</Button>
+
+				<DropdownMenu>
+					<DropdownMenuTrigger asChild>
+						<Button
+							variant="text"
+							size="icon"
+							type="button"
+							onMouseDown={(event) => event.preventDefault()}
+							title={t("More options")}
+						>
+							<HugeiconsIcon icon={MoreHorizontalIcon} />
+						</Button>
+					</DropdownMenuTrigger>
+					<DropdownMenuContent align="end" side="top">
+						<DropdownMenuItem
+							onClick={() => exportCurrentFrame({ editor })}
+						>
+							{t("Export current frame")}
+						</DropdownMenuItem>
+					</DropdownMenuContent>
+				</DropdownMenu>
 			</div>
 		</div>
 	);
