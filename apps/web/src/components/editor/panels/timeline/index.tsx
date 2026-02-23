@@ -153,6 +153,7 @@ export function Timeline() {
 		},
 		tracksScrollRef,
 		zoomLevel,
+		headerRef: timelineHeaderRef,
 	});
 
 	const containerWidth = tracksContainerRef.current?.clientWidth || 1000;

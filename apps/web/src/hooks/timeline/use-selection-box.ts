@@ -11,6 +11,7 @@ interface UseSelectionBoxProps {
 	isEnabled?: boolean;
 	tracksScrollRef: React.RefObject<HTMLDivElement | null>;
 	zoomLevel: number;
+	headerRef?: React.RefObject<HTMLElement | null>;
 }
 
 interface SelectionBoxState {
@@ -92,6 +93,7 @@ export function useSelectionBox({
 	isEnabled = true,
 	tracksScrollRef,
 	zoomLevel,
+	headerRef,
 }: UseSelectionBoxProps) {
 	const editor = useEditor();
 	const tracks = editor.timeline.getTracks();
@@ -124,12 +126,18 @@ export function useSelectionBox({
 			if (!containerRef.current) return;
 
 			const container = containerRef.current;
-			const selectionRectangle = getSelectionRectangleInContent({
+			const rawSelectionRectangle = getSelectionRectangleInContent({
 				container,
 				scrollContainer: tracksScrollRef.current,
 				startPos,
 				endPos,
 			});
+			const headerHeight = headerRef?.current?.offsetHeight ?? 0;
+			const selectionRectangle = {
+				...rawSelectionRectangle,
+				top: rawSelectionRectangle.top - headerHeight,
+				bottom: rawSelectionRectangle.bottom - headerHeight,
+			};
 			const pixelsPerSecond = TIMELINE_CONSTANTS.PIXELS_PER_SECOND * zoomLevel;
 			const selectedElements: { trackId: string; elementId: string }[] = [];
 
@@ -168,7 +176,7 @@ export function useSelectionBox({
 			}
 			onSelectionComplete(selectedElements);
 		},
-		[containerRef, onSelectionComplete, tracks, tracksScrollRef, zoomLevel],
+		[containerRef, headerRef, onSelectionComplete, tracks, tracksScrollRef, zoomLevel],
 	);
 
 	useEffect(() => {
