@@ -52,6 +52,7 @@ function buildVisualElementNode({
 			transform: element.transform,
 			opacity: element.opacity,
 			playbackRate: videoElement.playbackRate,
+			reversed: videoElement.reversed,
 		});
 	}
 

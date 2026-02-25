@@ -17,13 +17,18 @@ import {
 	ContextMenu,
 	ContextMenuContent,
 	ContextMenuItem,
+	ContextMenuCheckboxItem,
 	ContextMenuSeparator,
+	ContextMenuSub,
+	ContextMenuSubContent,
+	ContextMenuSubTrigger,
 	ContextMenuTrigger,
 } from "../../../ui/context-menu";
 import type {
 	TimelineElement as TimelineElementType,
 	TimelineTrack,
 	ElementDragState,
+	VideoElement,
 } from "@/types/timeline";
 import type { MediaAsset } from "@/types/assets";
 import { mediaSupportsAudio } from "@/lib/media/media-utils";
@@ -42,9 +47,13 @@ import {
 	Search01Icon,
 	Exchange01Icon,
 	MusicNote03Icon,
+	FlipHorizontalIcon,
+	ArrowTurnBackwardIcon,
+	Edit02Icon,
 } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
 import { uppercase } from "@/utils/string";
+import { useTranslation } from "@i18next-toolkit/react";
 import type { ComponentProps } from "react";
 
 function getDisplayShortcut(action: TAction) {
@@ -190,6 +199,12 @@ export function TimelineElement({
 							</ActionMenuItem>
 						)}
 					</>
+				)}
+				{element.type === "video" && selectedElements.length === 1 && (
+					<VideoEditSubmenu
+						element={element as VideoElement}
+						trackId={track.id}
+					/>
 				)}
 				{canElementBeHidden(element) && (
 					<VisibilityMenuItem
@@ -551,6 +566,86 @@ function DeleteMenuItem({
 				? `Delete ${selectedCount} elements`
 				: `Delete ${elementType === "text" ? "text" : "clip"}`}
 		</ActionMenuItem>
+	);
+}
+
+function VideoEditSubmenu({
+	element,
+	trackId,
+}: {
+	element: VideoElement;
+	trackId: string;
+}) {
+	const { t } = useTranslation();
+	const editor = useEditor();
+
+	const isMirrored = element.transform.flipX === true;
+	const isReversed = element.reversed === true;
+
+	const toggleMirror = (event: React.MouseEvent) => {
+		event.stopPropagation();
+		editor.timeline.updateElements({
+			updates: [
+				{
+					trackId,
+					elementId: element.id,
+					updates: {
+						transform: {
+							...element.transform,
+							flipX: !isMirrored,
+						},
+					},
+				},
+			],
+		});
+	};
+
+	const toggleReverse = (event: React.MouseEvent) => {
+		event.stopPropagation();
+		editor.timeline.updateElements({
+			updates: [
+				{
+					trackId,
+					elementId: element.id,
+					updates: { reversed: !isReversed },
+				},
+			],
+		});
+	};
+
+	return (
+		<ContextMenuSub>
+			<ContextMenuSubTrigger>
+				<HugeiconsIcon icon={Edit02Icon} className="mr-2 size-4" />
+				{t("Basic Edit")}
+			</ContextMenuSubTrigger>
+			<ContextMenuSubContent className="w-48">
+				<ContextMenuCheckboxItem
+					checked={isMirrored}
+					onClick={toggleMirror}
+					onKeyDown={(event) => {
+						if (event.key === "Enter" || event.key === " ") {
+							toggleMirror(event as unknown as React.MouseEvent);
+						}
+					}}
+				>
+					<HugeiconsIcon icon={FlipHorizontalIcon} className="mr-2 size-4" />
+					{t("Mirror")}
+				</ContextMenuCheckboxItem>
+				<ContextMenuCheckboxItem
+					checked={isReversed}
+					onClick={toggleReverse}
+					onKeyDown={(event) => {
+						if (event.key === "Enter" || event.key === " ") {
+							toggleReverse(event as unknown as React.MouseEvent);
+						}
+					}}
+				>
+					<HugeiconsIcon icon={ArrowTurnBackwardIcon} className="mr-2 size-4" />
+					{t("Reverse")}
+				</ContextMenuCheckboxItem>
+			</ContextMenuSubContent>
+		</ContextMenuSub>
 	);
 }
 

@@ -51,6 +51,8 @@ export interface Transform {
 		y: number;
 	};
 	rotate: number;
+	flipX?: boolean;
+	flipY?: boolean;
 }
 
 // ---- Transitions ----
@@ -114,6 +116,7 @@ export interface VideoElement extends BaseTimelineElement {
 	transform: Transform;
 	opacity: number;
 	playbackRate?: number;
+	reversed?: boolean;
 }
 
 export interface ImageElement extends BaseTimelineElement {

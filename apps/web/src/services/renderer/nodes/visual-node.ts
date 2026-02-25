@@ -12,6 +12,7 @@ export interface VisualNodeParams {
 	transform: Transform;
 	opacity: number;
 	playbackRate?: number;
+	reversed?: boolean;
 }
 
 export abstract class VisualNode<
@@ -20,6 +21,9 @@ export abstract class VisualNode<
 	protected getLocalTime(time: number): number {
 		const rate = this.params.playbackRate ?? 1;
 		const elapsed = time - this.params.timeOffset;
+		if (this.params.reversed) {
+			return this.params.trimStart + rate * (this.params.duration - elapsed);
+		}
 		return this.params.trimStart + elapsed * rate;
 	}
 
@@ -57,11 +61,23 @@ export abstract class VisualNode<
 
 		renderer.context.globalAlpha = opacity;
 
-		if (transform.rotate !== 0) {
-			const centerX = x + scaledWidth / 2;
-			const centerY = y + scaledHeight / 2;
+		const centerX = x + scaledWidth / 2;
+		const centerY = y + scaledHeight / 2;
+
+		const needsFlip = transform.flipX || transform.flipY;
+		const needsRotate = transform.rotate !== 0;
+
+		if (needsRotate || needsFlip) {
 			renderer.context.translate(centerX, centerY);
-			renderer.context.rotate((transform.rotate * Math.PI) / 180);
+			if (needsRotate) {
+				renderer.context.rotate((transform.rotate * Math.PI) / 180);
+			}
+			if (needsFlip) {
+				renderer.context.scale(
+					transform.flipX ? -1 : 1,
+					transform.flipY ? -1 : 1,
+				);
+			}
 			renderer.context.translate(-centerX, -centerY);
 		}
 
