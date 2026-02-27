@@ -79,10 +79,7 @@ export function CharacterPicker({
 						}
 					}}
 				>
-					<HugeiconsIcon
-						icon={Cancel01Icon}
-						className="size-3 text-white"
-					/>
+					<HugeiconsIcon icon={Cancel01Icon} className="size-3 text-white" />
 				</button>
 			</div>
 		);

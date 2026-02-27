@@ -4,6 +4,7 @@ import { useTranslation } from "@i18next-toolkit/react";
 import { useCallback, useState } from "react";
 import { PanelBaseView as BaseView } from "@/components/editor/panels/panel-base-view";
 import { Button } from "@/components/ui/button";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
 	Select,
 	SelectContent,
@@ -1144,22 +1145,42 @@ function AICharactersView() {
 	);
 }
 
+function AIGenerateView() {
+	const { t } = useTranslation();
+
+	return (
+		<Tabs defaultValue="image" className="-mt-2 flex h-full flex-col">
+			<TabsList className="mb-3 justify-start">
+				<TabsTrigger value="image">{t("Image")}</TabsTrigger>
+				<TabsTrigger value="video">{t("Video")}</TabsTrigger>
+			</TabsList>
+			<TabsContent
+				value="image"
+				className="mt-0 flex min-h-0 flex-1 flex-col"
+			>
+				<AIImageView />
+			</TabsContent>
+			<TabsContent
+				value="video"
+				className="mt-0 flex min-h-0 flex-1 flex-col"
+			>
+				<AIVideoView />
+			</TabsContent>
+		</Tabs>
+	);
+}
+
 export function AIView() {
 	const { t } = useTranslation();
 
 	return (
 		<BaseView
-			defaultTab="ai-image"
+			defaultTab="generate"
 			tabs={[
 				{
-					value: "ai-image",
-					label: t("AI Image"),
-					content: <AIImageView />,
-				},
-				{
-					value: "ai-video",
-					label: t("AI Video"),
-					content: <AIVideoView />,
+					value: "generate",
+					label: t("Generate"),
+					content: <AIGenerateView />,
 				},
 				{
 					value: "ai-characters",
