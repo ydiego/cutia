@@ -95,9 +95,9 @@ export function StarField() {
 		({ ctx, width, height, time }: { ctx: CanvasRenderingContext2D; width: number; height: number; time: number }) => {
 			ctx.clearRect(0, 0, width, height);
 
-			const globalAlpha = isDark ? 1 : 0.25;
-			const starColor = isDark ? "255, 255, 255" : "0, 0, 0";
-			const glowColor = isDark ? "100, 140, 255" : "80, 100, 200";
+			const globalAlpha = isDark ? 1 : 0.45;
+			const starColor = isDark ? "255, 255, 255" : "120, 140, 180";
+			const glowColor = isDark ? "100, 140, 255" : "100, 130, 220";
 
 			ctx.save();
 			ctx.globalAlpha = globalAlpha;

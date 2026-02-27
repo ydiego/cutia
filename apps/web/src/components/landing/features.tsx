@@ -53,6 +53,7 @@ export function Features() {
 
 	return (
 		<section id="features" className="relative px-4 py-24 md:py-32">
+			<div className="pointer-events-none absolute inset-0 -z-10 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-primary/[0.03] via-transparent to-transparent dark:from-transparent" />
 			<div className="mx-auto max-w-6xl">
 				<motion.div
 					className="mb-16 text-center"
@@ -75,7 +76,7 @@ export function Features() {
 					{features.map((feature, index) => (
 						<motion.div
 							key={feature.title}
-							className="group rounded-2xl border border-border/50 bg-card/50 p-6 backdrop-blur-sm transition-colors hover:border-border hover:bg-card"
+							className="group rounded-2xl border border-border/50 bg-card/50 p-6 shadow-sm backdrop-blur-sm transition-all hover:border-border hover:bg-card hover:shadow-md dark:shadow-none dark:hover:shadow-none"
 							initial={{ opacity: 0, y: 40 }}
 							whileInView={{ opacity: 1, y: 0 }}
 							viewport={{ once: true, margin: "-60px" }}
@@ -87,11 +88,11 @@ export function Features() {
 							whileHover={{ y: -4, transition: { duration: 0.2 } }}
 						>
 							<motion.div
-								className="mb-4 flex size-11 items-center justify-center rounded-xl bg-foreground/5 dark:bg-foreground/10"
+								className="mb-4 flex size-11 items-center justify-center rounded-xl bg-primary/8 dark:bg-foreground/10"
 								whileHover={{ scale: 1.1, rotate: 5 }}
 								transition={{ type: "spring", stiffness: 400, damping: 15 }}
 							>
-								<feature.icon className="size-5 text-foreground/70" />
+								<feature.icon className="size-5 text-primary/70 dark:text-foreground/70" />
 							</motion.div>
 							<h3 className="mb-2 text-lg font-semibold">{feature.title}</h3>
 							<p className="text-muted-foreground text-sm leading-relaxed">

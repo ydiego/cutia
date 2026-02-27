@@ -18,9 +18,9 @@ export function CTASection() {
 				viewport={{ once: true, margin: "-100px" }}
 				transition={{ duration: 0.7, ease: "easeOut" }}
 			>
-				<div className="relative overflow-hidden rounded-3xl border border-border/50 bg-muted/20 p-12 md:p-16">
+				<div className="relative overflow-hidden rounded-3xl border border-border/50 bg-gradient-to-b from-primary/[0.03] to-transparent p-12 shadow-sm dark:bg-muted/20 dark:from-transparent dark:shadow-none md:p-16">
 					<motion.div
-						className="absolute -top-1/2 left-1/2 h-[400px] w-[600px] -translate-x-1/2 rounded-full bg-primary/5 blur-[100px]"
+						className="absolute -top-1/2 left-1/2 h-[400px] w-[600px] -translate-x-1/2 rounded-full bg-primary/10 blur-[100px] dark:bg-primary/5"
 						animate={{
 							scale: [1, 1.3, 1],
 							opacity: [0.3, 0.5, 0.3],

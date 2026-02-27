@@ -23,12 +23,14 @@ export function Hero() {
 	return (
 		<section className="relative flex min-h-[calc(100svh-4rem)] flex-col items-center justify-center overflow-hidden px-4">
 			<div className="pointer-events-none absolute inset-0 -z-10">
-				<div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-muted/50 via-transparent to-transparent" />
+				<div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-muted/50 via-transparent to-transparent dark:from-muted/50" />
+				<div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_left,_var(--tw-gradient-stops))] from-primary/[0.06] via-transparent to-transparent dark:from-primary/[0.03]" />
+				<div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-violet-500/[0.04] via-transparent to-transparent dark:from-violet-500/[0.02]" />
 
 				{[600, 400, 200].map((size, index) => (
 					<motion.div
 						key={size}
-						className="absolute top-1/4 left-1/2 rounded-full border border-border/20"
+						className="absolute top-1/4 left-1/2 rounded-full border border-primary/10 dark:border-border/20"
 						style={{
 							width: size,
 							height: size,
@@ -48,7 +50,7 @@ export function Hero() {
 				))}
 
 				<motion.div
-					className="absolute top-1/6 left-1/2 h-[500px] w-[800px] -translate-x-1/2 rounded-full bg-primary/5 blur-[120px]"
+					className="absolute top-1/6 left-1/2 h-[500px] w-[800px] -translate-x-1/2 rounded-full bg-primary/8 blur-[120px] dark:bg-primary/5"
 					animate={{
 						scale: [1, 1.2, 1],
 						opacity: [0.3, 0.6, 0.3],
@@ -63,7 +65,7 @@ export function Hero() {
 				{floatingParticles.map((particle) => (
 					<motion.div
 						key={particle.id}
-						className="absolute rounded-full bg-foreground/20"
+						className="absolute rounded-full bg-primary/25 dark:bg-foreground/20"
 						style={{
 							width: particle.size,
 							height: particle.size,
@@ -86,7 +88,7 @@ export function Hero() {
 
 			<div className="mx-auto flex max-w-4xl flex-col items-center text-center">
 				<motion.div
-					className="mb-8 flex items-center gap-3 rounded-full border border-border/60 bg-muted/30 px-4 py-2"
+					className="mb-8 flex items-center gap-3 rounded-full border border-primary/15 bg-primary/[0.06] px-4 py-2 shadow-sm dark:border-border/60 dark:bg-muted/30 dark:shadow-none"
 					initial={{ opacity: 0, y: 20, scale: 0.9 }}
 					animate={{ opacity: 1, y: 0, scale: 1 }}
 					transition={{ duration: 0.6, ease: "easeOut" }}
@@ -112,7 +114,7 @@ export function Hero() {
 					{t('Edit videos,')}
 					<br />
 					<motion.span
-						className="text-muted-foreground inline-block"
+						className="inline-block bg-gradient-to-r from-muted-foreground to-muted-foreground/70 bg-clip-text text-transparent dark:from-muted-foreground dark:to-muted-foreground"
 						initial={{ opacity: 0, y: 20 }}
 						animate={{ opacity: 1, y: 0 }}
 						transition={{ duration: 0.7, delay: 0.35, ease: "easeOut" }}

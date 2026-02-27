@@ -16,6 +16,7 @@ export function FAQSection() {
 
 	return (
 		<section id="faq" className="relative px-4 py-24 md:py-32">
+			<div className="pointer-events-none absolute inset-0 -z-10 bg-gradient-to-b from-accent/50 via-transparent to-transparent dark:from-transparent" />
 			<div className="mx-auto max-w-3xl">
 				<motion.div
 					className="mb-12 text-center"
@@ -52,6 +53,7 @@ export function FAQSection() {
 					</Accordion>
 				</motion.div>
 			</div>
+
 		</section>
 	);
 }
