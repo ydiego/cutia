@@ -87,11 +87,13 @@ function ReferenceImagePicker({
 	disabled,
 	onSelect,
 	onClear,
+	className,
 }: {
 	previewUrl: string | null;
 	disabled: boolean;
 	onSelect: (file: File) => void;
 	onClear: () => void;
+	className?: string;
 }) {
 	const { t } = useTranslation();
 
@@ -108,7 +110,7 @@ function ReferenceImagePicker({
 
 	if (previewUrl) {
 		return (
-			<div className="group/ref relative">
+			<div className={cn("group/ref relative", className)}>
 				<button
 					type="button"
 					className="bg-muted/50 flex w-full items-center gap-2 overflow-hidden rounded-md border p-1.5"
@@ -152,15 +154,18 @@ function ReferenceImagePicker({
 	return (
 		<button
 			type="button"
-			className="bg-muted/30 hover:bg-muted/60 flex w-full items-center gap-2 rounded-md border border-dashed p-2 transition-colors"
+			className={cn(
+				"bg-muted/30 hover:bg-muted/60 flex w-full items-center gap-2 rounded-md border border-dashed p-2 transition-colors",
+				className,
+			)}
 			onClick={handleFileSelect}
 			onKeyDown={(event) => {
 				if (event.key === "Enter") handleFileSelect();
 			}}
 			disabled={disabled}
 		>
-			<HugeiconsIcon icon={Image01Icon} className="text-muted-foreground size-4" />
-			<span className="text-muted-foreground text-xs">
+			<HugeiconsIcon icon={Image01Icon} className="text-muted-foreground size-4 shrink-0" />
+			<span className="text-muted-foreground truncate text-xs">
 				{t("Add reference image (optional)")}
 			</span>
 		</button>
@@ -240,20 +245,26 @@ function AIImageView() {
 					}}
 				/>
 
-				<CharacterPicker
-					selectedCharacterId={selectedCharacterId}
-					onSelect={(id) => setSelectedCharacterId(id)}
-					disabled={isGenerating}
-				/>
+				<div className="flex items-start gap-2">
+					{(selectedCharacterId || !referenceImagePreview) && (
+						<CharacterPicker
+							selectedCharacterId={selectedCharacterId}
+							onSelect={(id) => setSelectedCharacterId(id)}
+							disabled={isGenerating}
+							className="flex-1 min-w-0"
+						/>
+					)}
 
-				{!selectedCharacterId && (
-					<ReferenceImagePicker
-						previewUrl={referenceImagePreview}
-						disabled={isGenerating}
-						onSelect={(file) => setReferenceImage(file)}
-						onClear={() => setReferenceImage(null)}
-					/>
-				)}
+					{!selectedCharacterId && (
+						<ReferenceImagePicker
+							previewUrl={referenceImagePreview}
+							disabled={isGenerating}
+							onSelect={(file) => setReferenceImage(file)}
+							onClear={() => setReferenceImage(null)}
+							className="flex-1 min-w-0"
+						/>
+					)}
+				</div>
 
 				<div className="flex items-center gap-2">
 					<Select value={aspectRatio} onValueChange={setAspectRatio}>
@@ -539,20 +550,26 @@ function AIVideoView() {
 					}}
 				/>
 
-				<CharacterPicker
-					selectedCharacterId={selectedCharacterId}
-					onSelect={(id) => setSelectedCharacterId(id)}
-					disabled={isGenerating}
-				/>
+				<div className="flex items-start gap-2">
+					{(selectedCharacterId || !referenceImagePreview) && (
+						<CharacterPicker
+							selectedCharacterId={selectedCharacterId}
+							onSelect={(id) => setSelectedCharacterId(id)}
+							disabled={isGenerating}
+							className="flex-1 min-w-0"
+						/>
+					)}
 
-				{!selectedCharacterId && (
-					<ReferenceImagePicker
-						previewUrl={referenceImagePreview}
-						disabled={isGenerating}
-						onSelect={(file) => setReferenceImage(file)}
-						onClear={() => setReferenceImage(null)}
-					/>
-				)}
+					{!selectedCharacterId && (
+						<ReferenceImagePicker
+							previewUrl={referenceImagePreview}
+							disabled={isGenerating}
+							onSelect={(file) => setReferenceImage(file)}
+							onClear={() => setReferenceImage(null)}
+							className="flex-1 min-w-0"
+						/>
+					)}
+				</div>
 
 				<div className="flex items-center gap-2">
 					<Select

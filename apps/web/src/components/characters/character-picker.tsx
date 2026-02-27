@@ -16,10 +16,12 @@ export function CharacterPicker({
 	selectedCharacterId,
 	onSelect,
 	disabled,
+	className,
 }: {
 	selectedCharacterId: string | null;
 	onSelect: (characterId: string | null) => void;
 	disabled?: boolean;
+	className?: string;
 }) {
 	const { t } = useTranslation();
 	const { characters } = useCharacterStore();
@@ -33,7 +35,7 @@ export function CharacterPicker({
 
 	if (selectedCharacter) {
 		return (
-			<div className="group/char relative">
+			<div className={cn("group/char relative", className)}>
 				<button
 					type="button"
 					className="bg-muted/50 flex w-full items-center gap-2 overflow-hidden rounded-md border p-1.5"
@@ -91,14 +93,17 @@ export function CharacterPicker({
 			<PopoverTrigger asChild>
 				<button
 					type="button"
-					className="bg-muted/30 hover:bg-muted/60 flex w-full items-center gap-2 rounded-md border border-dashed p-2 transition-colors"
+					className={cn(
+						"bg-muted/30 hover:bg-muted/60 flex w-full items-center gap-2 rounded-md border border-dashed p-2 transition-colors",
+						className,
+					)}
 					disabled={disabled}
 				>
 					<HugeiconsIcon
 						icon={UserIcon}
-						className="text-muted-foreground size-4"
+						className="text-muted-foreground size-4 shrink-0"
 					/>
-					<span className="text-muted-foreground text-xs">
+					<span className="text-muted-foreground truncate text-xs">
 						{t("Use character as reference (optional)")}
 					</span>
 				</button>
