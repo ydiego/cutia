@@ -47,6 +47,56 @@ import type {
 	CaptionChunk,
 } from "@/types/transcription";
 
+function encodeFloat32ToWav({
+	samples,
+	sampleRate,
+}: {
+	samples: Float32Array;
+	sampleRate: number;
+}): Blob {
+	const numChannels = 1;
+	const bitsPerSample = 16;
+	const byteRate = (sampleRate * numChannels * bitsPerSample) / 8;
+	const blockAlign = (numChannels * bitsPerSample) / 8;
+	const dataSize = samples.length * blockAlign;
+	const buffer = new ArrayBuffer(44 + dataSize);
+	const view = new DataView(buffer);
+
+	const writeString = ({
+		offset,
+		str,
+	}: {
+		offset: number;
+		str: string;
+	}) => {
+		for (let i = 0; i < str.length; i++) {
+			view.setUint8(offset + i, str.charCodeAt(i));
+		}
+	};
+
+	writeString({ offset: 0, str: "RIFF" });
+	view.setUint32(4, 36 + dataSize, true);
+	writeString({ offset: 8, str: "WAVE" });
+	writeString({ offset: 12, str: "fmt " });
+	view.setUint32(16, 16, true);
+	view.setUint16(20, 1, true);
+	view.setUint16(22, numChannels, true);
+	view.setUint32(24, sampleRate, true);
+	view.setUint32(28, byteRate, true);
+	view.setUint16(32, blockAlign, true);
+	view.setUint16(34, bitsPerSample, true);
+	writeString({ offset: 36, str: "data" });
+	view.setUint32(40, dataSize, true);
+
+	for (let i = 0; i < samples.length; i++) {
+		const clamped = Math.max(-1, Math.min(1, samples[i]));
+		const int16 = clamped < 0 ? clamped * 0x8000 : clamped * 0x7fff;
+		view.setInt16(44 + i * 2, int16, true);
+	}
+
+	return new Blob([buffer], { type: "audio/wav" });
+}
+
 function formatTimestamp({ seconds }: { seconds: number }): string {
 	const hours = Math.floor(seconds / 3600);
 	const minutes = Math.floor((seconds % 3600) / 60);
@@ -95,11 +145,19 @@ function formatRecordingDuration({ seconds }: { seconds: number }): string {
 	return `${String(mins).padStart(2, "0")}:${String(secs).padStart(2, "0")}`;
 }
 
+interface PreprocessedAudio {
+	samples: Float32Array;
+	sampleRate: number;
+}
+
 export function TranscriptionPlayground() {
 	const fileInputRef = useRef<HTMLInputElement>(null);
 	const mediaRecorderRef = useRef<MediaRecorder | null>(null);
 	const recordedChunksRef = useRef<Blob[]>([]);
 	const recordingTimerRef = useRef<ReturnType<typeof setInterval> | null>(null);
+	const preprocessedAudioRef = useRef<HTMLAudioElement>(null);
+	const activeSegmentRef = useRef<HTMLTableRowElement>(null);
+	const activeCaptionRef = useRef<HTMLTableRowElement>(null);
 
 	const [selectedFile, setSelectedFile] = useState<File | null>(null);
 	const [modelId, setModelId] = useState<TranscriptionModelId>(
@@ -127,10 +185,24 @@ export function TranscriptionPlayground() {
 	const [recordingDuration, setRecordingDuration] = useState(0);
 	const [micError, setMicError] = useState<string | null>(null);
 
+	const [preprocessedAudio, setPreprocessedAudio] =
+		useState<PreprocessedAudio | null>(null);
+	const [isPreprocessing, setIsPreprocessing] = useState(false);
+	const [currentPlayTime, setCurrentPlayTime] = useState(0);
+
 	const audioUrl = useMemo(() => {
 		if (!selectedFile) return null;
 		return URL.createObjectURL(selectedFile);
 	}, [selectedFile]);
+
+	const preprocessedUrl = useMemo(() => {
+		if (!preprocessedAudio) return null;
+		const wavBlob = encodeFloat32ToWav({
+			samples: preprocessedAudio.samples,
+			sampleRate: preprocessedAudio.sampleRate,
+		});
+		return URL.createObjectURL(wavBlob);
+	}, [preprocessedAudio]);
 
 	useEffect(() => {
 		return () => {
@@ -139,6 +211,14 @@ export function TranscriptionPlayground() {
 			}
 		};
 	}, [audioUrl]);
+
+	useEffect(() => {
+		return () => {
+			if (preprocessedUrl) {
+				URL.revokeObjectURL(preprocessedUrl);
+			}
+		};
+	}, [preprocessedUrl]);
 
 	useEffect(() => {
 		return () => {
@@ -159,6 +239,8 @@ export function TranscriptionPlayground() {
 		setStreamingChunks([]);
 		setStreamingTps(0);
 		setProgress({ status: "idle", progress: 0 });
+		setPreprocessedAudio(null);
+		setCurrentPlayTime(0);
 	}, []);
 
 	const handleFileChange = useCallback(
@@ -253,6 +335,30 @@ export function TranscriptionPlayground() {
 		}
 	}, []);
 
+	const handlePreprocess = useCallback(async () => {
+		if (!selectedFile) return;
+
+		setIsPreprocessing(true);
+		setError(null);
+
+		try {
+			const blob = new Blob([selectedFile], { type: selectedFile.type });
+			const { samples, sampleRate } = await decodeAudioToFloat32({
+				audioBlob: blob,
+				targetSampleRate: 16000,
+			});
+			setPreprocessedAudio({ samples, sampleRate });
+		} catch (caughtError) {
+			const message =
+				caughtError instanceof Error
+					? caughtError.message
+					: "Failed to preprocess audio";
+			setError(message);
+		} finally {
+			setIsPreprocessing(false);
+		}
+	}, [selectedFile]);
+
 	const handleTranscribe = useCallback(async () => {
 		if (!selectedFile) return;
 
@@ -268,14 +374,27 @@ export function TranscriptionPlayground() {
 		try {
 			setProgress({ status: "loading-model", progress: 0 });
 
-			const blob = new Blob([selectedFile], { type: selectedFile.type });
-			const { samples } = await decodeAudioToFloat32({
-				audioBlob: blob,
-				targetSampleRate: 16000,
-			});
+			let samples: Float32Array;
+			if (preprocessedAudio) {
+				samples = preprocessedAudio.samples;
+			} else {
+				const blob = new Blob([selectedFile], { type: selectedFile.type });
+				const decoded = await decodeAudioToFloat32({
+					audioBlob: blob,
+					targetSampleRate: 16000,
+				});
+				samples = decoded.samples;
+				setPreprocessedAudio({
+					samples: decoded.samples,
+					sampleRate: decoded.sampleRate,
+				});
+			}
+
+			// copy before passing to worker — postMessage transfers the buffer
+			const samplesCopy = new Float32Array(samples);
 
 			const transcriptionResult = await transcriptionService.transcribe({
-				audioData: samples,
+				audioData: samplesCopy,
 				language,
 				modelId,
 				onProgress: setProgress,
@@ -305,7 +424,7 @@ export function TranscriptionPlayground() {
 			setError(message);
 			setProgress({ status: "error", progress: 0 });
 		}
-	}, [selectedFile, modelId, language, wordsPerChunk]);
+	}, [selectedFile, modelId, language, wordsPerChunk, preprocessedAudio]);
 
 	const handleCancel = useCallback(() => {
 		transcriptionService.cancel();
@@ -327,6 +446,55 @@ export function TranscriptionPlayground() {
 		.map((chunk) => chunk.text)
 		.join("")
 		.trim();
+
+	const seekAndPlay = useCallback(({ time }: { time: number }) => {
+		const audio = preprocessedAudioRef.current;
+		if (!audio) return;
+		audio.currentTime = time;
+		audio.play().catch(() => {});
+	}, []);
+
+	const handleTimeUpdate = useCallback(() => {
+		const audio = preprocessedAudioRef.current;
+		if (audio) {
+			setCurrentPlayTime(audio.currentTime);
+		}
+	}, []);
+
+	const activeSegmentIndex = useMemo(() => {
+		if (!result) return -1;
+		return result.segments.findIndex(
+			(segment) =>
+				currentPlayTime >= segment.start && currentPlayTime < segment.end,
+		);
+	}, [result, currentPlayTime]);
+
+	const activeCaptionIndex = useMemo(() => {
+		if (captionChunks.length === 0) return -1;
+		return captionChunks.findIndex(
+			(chunk) =>
+				currentPlayTime >= chunk.startTime &&
+				currentPlayTime < chunk.startTime + chunk.duration,
+		);
+	}, [captionChunks, currentPlayTime]);
+
+	const prevSegmentIndexRef = useRef(-1);
+	if (activeSegmentIndex !== prevSegmentIndexRef.current) {
+		prevSegmentIndexRef.current = activeSegmentIndex;
+		activeSegmentRef.current?.scrollIntoView({
+			behavior: "smooth",
+			block: "nearest",
+		});
+	}
+
+	const prevCaptionIndexRef = useRef(-1);
+	if (activeCaptionIndex !== prevCaptionIndexRef.current) {
+		prevCaptionIndexRef.current = activeCaptionIndex;
+		activeCaptionRef.current?.scrollIntoView({
+			behavior: "smooth",
+			block: "nearest",
+		});
+	}
 
 	return (
 		<div className="flex flex-col gap-6">
@@ -383,17 +551,10 @@ export function TranscriptionPlayground() {
 								)}
 							</div>
 							{selectedFile && !isRecording && (
-								<>
-									<p className="text-muted-foreground text-xs">
-										{selectedFile.name} (
-										{(selectedFile.size / 1024 / 1024).toFixed(2)} MB)
-									</p>
-									{audioUrl && (
-										<audio controls src={audioUrl} className="mt-1 h-8 w-full">
-											<track kind="captions" />
-										</audio>
-									)}
-								</>
+								<p className="text-muted-foreground text-xs">
+									{selectedFile.name} (
+									{(selectedFile.size / 1024 / 1024).toFixed(2)} MB)
+								</p>
 							)}
 						</div>
 
@@ -459,6 +620,68 @@ export function TranscriptionPlayground() {
 							/>
 						</div>
 					</div>
+
+					{selectedFile && !isRecording && (
+						<div className="mt-4 grid grid-cols-1 gap-4 md:grid-cols-2">
+							<div className="flex flex-col gap-2">
+								<Label className="text-muted-foreground text-xs font-medium">
+									Original Audio
+								</Label>
+								{audioUrl && (
+									<audio
+										controls
+										src={audioUrl}
+										className="h-10 w-full"
+									>
+										<track kind="captions" />
+									</audio>
+								)}
+							</div>
+							<div className="flex flex-col gap-2">
+								<div className="flex items-center gap-2">
+									<Label className="text-muted-foreground text-xs font-medium">
+										Preprocessed (16kHz mono)
+									</Label>
+									{preprocessedAudio && (
+										<Badge variant="outline" className="text-xs">
+											{preprocessedAudio.sampleRate}Hz ·{" "}
+											{(
+												preprocessedAudio.samples.length /
+												preprocessedAudio.sampleRate
+											).toFixed(2)}
+											s ·{" "}
+											{preprocessedAudio.samples.length.toLocaleString()}{" "}
+											samples
+										</Badge>
+									)}
+								</div>
+								{preprocessedUrl ? (
+									<audio
+										ref={preprocessedAudioRef}
+										controls
+										src={preprocessedUrl}
+										className="h-10 w-full"
+										onTimeUpdate={handleTimeUpdate}
+									>
+										<track kind="captions" />
+									</audio>
+								) : (
+									<Button
+										type="button"
+										variant="outline"
+										size="sm"
+										className="w-fit"
+										onClick={handlePreprocess}
+										disabled={isPreprocessing || isProcessing}
+									>
+										{isPreprocessing
+											? "Preprocessing..."
+											: "Preprocess Audio"}
+									</Button>
+								)}
+							</div>
+						</div>
+					)}
 
 					<div className="mt-4 flex items-center gap-3">
 						<Button
@@ -637,23 +860,38 @@ export function TranscriptionPlayground() {
 											</TableRow>
 										</TableHeader>
 										<TableBody>
-											{result.segments.map((segment, index) => (
-												<TableRow key={`${segment.start}-${segment.end}`}>
-													<TableCell className="text-muted-foreground font-mono text-xs">
-														{index + 1}
-													</TableCell>
-													<TableCell className="font-mono text-xs">
-														{formatTimestamp({ seconds: segment.start })}
-													</TableCell>
-													<TableCell className="font-mono text-xs">
-														{formatTimestamp({ seconds: segment.end })}
-													</TableCell>
-													<TableCell className="text-muted-foreground font-mono text-xs">
-														{(segment.end - segment.start).toFixed(3)}s
-													</TableCell>
-													<TableCell>{segment.text}</TableCell>
-												</TableRow>
-											))}
+											{result.segments.map((segment, index) => {
+												const isActive = index === activeSegmentIndex;
+												return (
+													<TableRow
+														key={`${segment.start}-${segment.end}`}
+														ref={isActive ? activeSegmentRef : undefined}
+														className={`cursor-pointer ${isActive ? "bg-primary/10" : ""}`}
+														onClick={() =>
+															seekAndPlay({ time: segment.start })
+														}
+														onKeyDown={(event) => {
+															if (event.key === "Enter" || event.key === " ") {
+																seekAndPlay({ time: segment.start });
+															}
+														}}
+													>
+														<TableCell className="text-muted-foreground font-mono text-xs">
+															{index + 1}
+														</TableCell>
+														<TableCell className="font-mono text-xs">
+															{formatTimestamp({ seconds: segment.start })}
+														</TableCell>
+														<TableCell className="font-mono text-xs">
+															{formatTimestamp({ seconds: segment.end })}
+														</TableCell>
+														<TableCell className="text-muted-foreground font-mono text-xs">
+															{(segment.end - segment.start).toFixed(3)}s
+														</TableCell>
+														<TableCell>{segment.text}</TableCell>
+													</TableRow>
+												);
+											})}
 										</TableBody>
 									</Table>
 								</div>
@@ -703,27 +941,45 @@ export function TranscriptionPlayground() {
 												</TableRow>
 											</TableHeader>
 											<TableBody>
-												{captionChunks.map((chunk, index) => (
-													<TableRow
-														key={`${chunk.startTime}-${chunk.duration}`}
-													>
-														<TableCell className="text-muted-foreground font-mono text-xs">
-															{index + 1}
-														</TableCell>
-														<TableCell className="font-mono text-xs">
-															{formatTimestamp({ seconds: chunk.startTime })}
-														</TableCell>
-														<TableCell className="text-muted-foreground font-mono text-xs">
-															{chunk.duration.toFixed(3)}s
-														</TableCell>
-														<TableCell className="font-mono text-xs">
-															{formatTimestamp({
-																seconds: chunk.startTime + chunk.duration,
-															})}
-														</TableCell>
-														<TableCell>{chunk.text}</TableCell>
-													</TableRow>
-												))}
+												{captionChunks.map((chunk, index) => {
+													const isActive = index === activeCaptionIndex;
+													return (
+														<TableRow
+															key={`${chunk.startTime}-${chunk.duration}`}
+															ref={isActive ? activeCaptionRef : undefined}
+															className={`cursor-pointer ${isActive ? "bg-primary/10" : ""}`}
+															onClick={() =>
+																seekAndPlay({ time: chunk.startTime })
+															}
+															onKeyDown={(event) => {
+																if (
+																	event.key === "Enter" ||
+																	event.key === " "
+																) {
+																	seekAndPlay({ time: chunk.startTime });
+																}
+															}}
+														>
+															<TableCell className="text-muted-foreground font-mono text-xs">
+																{index + 1}
+															</TableCell>
+															<TableCell className="font-mono text-xs">
+																{formatTimestamp({
+																	seconds: chunk.startTime,
+																})}
+															</TableCell>
+															<TableCell className="text-muted-foreground font-mono text-xs">
+																{chunk.duration.toFixed(3)}s
+															</TableCell>
+															<TableCell className="font-mono text-xs">
+																{formatTimestamp({
+																	seconds: chunk.startTime + chunk.duration,
+																})}
+															</TableCell>
+															<TableCell>{chunk.text}</TableCell>
+														</TableRow>
+													);
+												})}
 											</TableBody>
 										</Table>
 									</div>
