@@ -65,6 +65,7 @@ export class SceneExporter extends EventEmitter<SceneExporterEvents> {
 			width,
 			height,
 			fps,
+			imageSmoothingQuality: "high",
 		});
 
 		this.format = format;

@@ -4,6 +4,7 @@ export type CanvasRendererParams = {
 	width: number;
 	height: number;
 	fps: number;
+	imageSmoothingQuality?: ImageSmoothingQuality;
 };
 
 export class CanvasRenderer {
@@ -12,11 +13,13 @@ export class CanvasRenderer {
 	width: number;
 	height: number;
 	fps: number;
+	private smoothingQuality: ImageSmoothingQuality;
 
-	constructor({ width, height, fps }: CanvasRendererParams) {
+	constructor({ width, height, fps, imageSmoothingQuality = "low" }: CanvasRendererParams) {
 		this.width = width;
 		this.height = height;
 		this.fps = fps;
+		this.smoothingQuality = imageSmoothingQuality;
 
 		try {
 			this.canvas = new OffscreenCanvas(width, height);
@@ -34,6 +37,7 @@ export class CanvasRenderer {
 		this.context = context as
 			| OffscreenCanvasRenderingContext2D
 			| CanvasRenderingContext2D;
+		this.applySmoothing();
 	}
 
 	setSize({ width, height }: { width: number; height: number }) {
@@ -54,6 +58,12 @@ export class CanvasRenderer {
 		this.context = context as
 			| OffscreenCanvasRenderingContext2D
 			| CanvasRenderingContext2D;
+		this.applySmoothing();
+	}
+
+	private applySmoothing() {
+		this.context.imageSmoothingEnabled = true;
+		this.context.imageSmoothingQuality = this.smoothingQuality;
 	}
 
 	private clear() {
