@@ -1,7 +1,7 @@
 "use client";
 
-import { useTranslation } from "@i18next-toolkit/react";
-import Link from "next/link";
+import { useTranslation } from "@i18next-toolkit/nextjs-approuter";
+import { Link } from "@/lib/navigation";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";

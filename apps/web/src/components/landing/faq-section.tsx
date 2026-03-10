@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "motion/react";
-import { useTranslation } from "@i18next-toolkit/react";
+import { useTranslation } from "@i18next-toolkit/nextjs-approuter";
 import {
 	Accordion,
 	AccordionContent,

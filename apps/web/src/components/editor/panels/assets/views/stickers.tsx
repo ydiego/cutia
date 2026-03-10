@@ -1,6 +1,6 @@
 "use client";
 
-import { useTranslation } from "@i18next-toolkit/react";
+import { useTranslation } from "@i18next-toolkit/nextjs-approuter";
 import Image from "next/image";
 import type { CSSProperties } from "react";
 import { useEffect, useMemo, useState } from "react";

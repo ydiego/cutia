@@ -2,7 +2,7 @@
 
 import { HugeiconsIcon } from "@hugeicons/react";
 import { Settings05Icon } from "@hugeicons/core-free-icons";
-import { useTranslation } from "@i18next-toolkit/react";
+import { useTranslation } from "@i18next-toolkit/nextjs-approuter";
 
 export function EmptyView() {
 	const { t } = useTranslation();

@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
-import { useTranslation } from "@i18next-toolkit/react";
+import { useTranslation } from "@i18next-toolkit/nextjs-approuter";
 import {
 	Dialog,
 	DialogContent,

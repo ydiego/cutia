@@ -54,7 +54,7 @@ import {
 } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
 import { uppercase } from "@/utils/string";
-import { useTranslation } from "@i18next-toolkit/react";
+import { useTranslation } from "@i18next-toolkit/nextjs-approuter";
 import type { ComponentProps } from "react";
 import { VideoThumbnailStrip } from "./video-thumbnail-strip";
 

@@ -8,7 +8,7 @@ import { useElementSelection } from "../timeline/element/use-element-selection";
 import { getElementsAtTime } from "@/lib/timeline";
 import { generateAndInsertSpeech } from "@/lib/tts/service";
 import { toast } from "sonner";
-import { i18next } from "@i18next-toolkit/react";
+import { i18next } from "@/lib/i18n";
 
 export function useEditorActions() {
 	const editor = useEditor();

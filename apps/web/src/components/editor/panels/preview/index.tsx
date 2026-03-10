@@ -32,7 +32,7 @@ import { HugeiconsIcon } from "@hugeicons/react";
 import { useMediaPreviewStore } from "@/stores/media-preview-store";
 import type { MediaAsset } from "@/types/assets";
 import { cn } from "@/utils/ui";
-import { useTranslation } from "@i18next-toolkit/react";
+import { useTranslation } from "@i18next-toolkit/nextjs-approuter";
 
 function usePreviewSize() {
 	const editor = useEditor();

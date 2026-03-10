@@ -1,6 +1,6 @@
 "use client";
 
-import { useTranslation } from "@i18next-toolkit/react";
+import { useTranslation } from "@i18next-toolkit/nextjs-approuter";
 import {
 	Table,
 	TableBody,

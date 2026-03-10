@@ -26,7 +26,7 @@ import {
 import { PropertyGroup } from "@/components/editor/panels/properties/property-item";
 import { useEditor } from "@/hooks/use-editor";
 import { DEFAULT_EXPORT_OPTIONS } from "@/constants/export-constants";
-import { useTranslation } from "@i18next-toolkit/react";
+import { useTranslation } from "@i18next-toolkit/nextjs-approuter";
 
 export function ExportButton() {
 	const { t } = useTranslation();

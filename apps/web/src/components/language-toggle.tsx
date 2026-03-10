@@ -8,7 +8,10 @@ import {
 	DropdownMenuTrigger,
 } from "./ui/dropdown-menu";
 import { cn } from "@/utils/ui";
-import { useTranslation, setLanguage } from "@i18next-toolkit/react";
+import {
+	useLocale,
+	useChangeLocale,
+} from "@i18next-toolkit/nextjs-approuter";
 import { Languages, Check } from "lucide-react";
 
 const SUPPORTED_LANGUAGES = [
@@ -35,8 +38,8 @@ export function LanguageToggle({
 	className,
 	iconClassName,
 }: LanguageToggleProps) {
-	const { i18n } = useTranslation();
-	const currentLanguage = i18n.language;
+	const currentLanguage = useLocale();
+	const changeLocale = useChangeLocale();
 
 	return (
 		<DropdownMenu>
@@ -56,7 +59,7 @@ export function LanguageToggle({
 					<DropdownMenuItem
 						key={language.code}
 						className="flex items-center justify-between gap-2"
-						onClick={() => setLanguage(language.code)}
+						onClick={() => changeLocale(language.code)}
 					>
 						{language.label}
 						{currentLanguage === language.code && (

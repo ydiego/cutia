@@ -1,7 +1,7 @@
 "use client";
 
 import { useEditor } from "@/hooks/use-editor";
-import { useTranslation } from "@i18next-toolkit/react";
+import { useTranslation } from "@i18next-toolkit/nextjs-approuter";
 import {
 	TooltipProvider,
 	Tooltip,

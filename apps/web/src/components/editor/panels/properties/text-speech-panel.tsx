@@ -1,8 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import { useTranslation } from "@i18next-toolkit/react";
-import { i18next } from "@i18next-toolkit/react";
+import { useTranslation } from "@i18next-toolkit/nextjs-approuter";
+import { i18next } from "@/lib/i18n";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";

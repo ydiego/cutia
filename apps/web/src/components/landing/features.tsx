@@ -2,7 +2,7 @@
 
 import { Shield, Globe, Code2, Sparkles, Layers, MonitorPlay } from "lucide-react";
 import { motion } from "motion/react";
-import { useTranslation } from "@i18next-toolkit/react";
+import { useTranslation } from "@i18next-toolkit/nextjs-approuter";
 
 export function Features() {
 	const { t } = useTranslation();

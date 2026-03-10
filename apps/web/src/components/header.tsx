@@ -1,9 +1,9 @@
 "use client";
 
 import { useState } from "react";
-import Link from "next/link";
+import { Link } from "@/lib/navigation";
 import { motion } from "motion/react";
-import { useTranslation } from "@i18next-toolkit/react";
+import { useTranslation } from "@i18next-toolkit/nextjs-approuter";
 import { Button } from "./ui/button";
 import { ArrowRight } from "lucide-react";
 import Image from "next/image";

@@ -1,9 +1,9 @@
 "use client";
 
 import { Button } from "./ui/button";
-import Link from "next/link";
+import { Link } from "@/lib/navigation";
 import { SOCIAL_LINKS } from "@/constants/site-constants";
-import { useTranslation } from "@i18next-toolkit/react";
+import { useTranslation } from "@i18next-toolkit/nextjs-approuter";
 import {
 	GithubIcon,
 	Link04Icon,

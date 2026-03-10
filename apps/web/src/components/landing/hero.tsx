@@ -3,10 +3,10 @@
 import { Button } from "../ui/button";
 import { ArrowRight, Play } from "lucide-react";
 import Image from "next/image";
-import Link from "next/link";
+import { Link } from "@/lib/navigation";
 import { DEFAULT_LOGO_URL, SOCIAL_LINKS } from "@/constants/site-constants";
 import { motion } from "motion/react";
-import { useTranslation } from "@i18next-toolkit/react";
+import { useTranslation } from "@i18next-toolkit/nextjs-approuter";
 
 const floatingParticles = Array.from({ length: 6 }, (_, i) => ({
 	id: i,

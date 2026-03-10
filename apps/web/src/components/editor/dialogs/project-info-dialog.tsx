@@ -8,7 +8,7 @@ import {
 	DialogHeader,
 	DialogTitle,
 } from "@/components/ui/dialog";
-import { useTranslation } from "@i18next-toolkit/react";
+import { useTranslation } from "@i18next-toolkit/nextjs-approuter";
 import type { TProjectMetadata } from "@/types/project";
 import { formatDate } from "@/utils/date";
 import { formatTimeCode } from "@/lib/time";

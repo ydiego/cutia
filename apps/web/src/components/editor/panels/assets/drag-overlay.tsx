@@ -1,4 +1,4 @@
-import { useTranslation } from "@i18next-toolkit/react";
+import { useTranslation } from "@i18next-toolkit/nextjs-approuter";
 import { HugeiconsIcon } from "@hugeicons/react";
 import { UploadIcon } from "@hugeicons/core-free-icons";
 

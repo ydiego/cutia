@@ -1,4 +1,4 @@
-import { useTranslation } from "@i18next-toolkit/react";
+import { useTranslation } from "@i18next-toolkit/nextjs-approuter";
 import { Button } from "@/components/ui/button";
 import { PanelBaseView as BaseView } from "@/components/editor/panels/panel-base-view";
 import {

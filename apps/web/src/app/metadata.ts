@@ -44,5 +44,21 @@ export const baseMetaData: Metadata = {
 		title: SITE_INFO.title,
 	},
 	manifest: "/manifest.json",
+	alternates: {
+		languages: {
+			en: "/en",
+			zh: "/zh",
+			ja: "/ja",
+			ko: "/ko",
+			es: "/es",
+			pt: "/pt",
+			fr: "/fr",
+			de: "/de",
+			id: "/id",
+			vi: "/vi",
+			ru: "/ru",
+			it: "/it",
+		},
+	},
 	other: {},
 };

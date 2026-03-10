@@ -1,18 +1,10 @@
-import { NextResponse } from "next/server";
+import { createI18nMiddleware } from "@i18next-toolkit/nextjs-approuter/middleware";
+import { i18nConfig } from "./i18n.config";
 
-export async function middleware() {
-	return NextResponse.next();
-}
+export default createI18nMiddleware(i18nConfig);
 
 export const config = {
 	matcher: [
-		/*
-		 * Match all request paths except for the ones starting with:
-		 * - api (API routes)
-		 * - _next/static (static files)
-		 * - _next/image (image optimization files)
-		 * - favicon.ico (favicon file)
-		 */
-		"/((?!api|_next/static|_next/image|favicon.ico).*)",
+		"/((?!api|_next/static|_next/image|favicon.ico|locales|logos|manifest.json|icon.svg|robots.txt|sitemap.xml|llms.txt).*)",
 	],
 };

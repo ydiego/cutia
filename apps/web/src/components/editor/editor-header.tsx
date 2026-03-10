@@ -11,7 +11,7 @@ import {
 } from "../ui/dropdown-menu";
 import { RenameProjectDialog } from "./dialogs/rename-project-dialog";
 import { DeleteProjectDialog } from "./dialogs/delete-project-dialog";
-import { useRouter } from "next/navigation";
+import { useRouter } from "@/lib/navigation";
 import { ExportButton } from "./export-button";
 import { ThemeToggle } from "../theme-toggle";
 import { LanguageToggle } from "../language-toggle";
@@ -27,7 +27,7 @@ import { HugeiconsIcon } from "@hugeicons/react";
 import { ShortcutsDialog } from "./dialogs/shortcuts-dialog";
 import Image from "next/image";
 import { cn } from "@/utils/ui";
-import { useTranslation } from "@i18next-toolkit/react";
+import { useTranslation } from "@i18next-toolkit/nextjs-approuter";
 import { useAgentStore } from "@/stores/agent-store";
 
 export function EditorHeader() {

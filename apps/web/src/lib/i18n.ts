@@ -1,15 +1,20 @@
-import { setupI18nInstance } from "@i18next-toolkit/react";
+type TranslateFn = (
+	key: string,
+	options?: Record<string, unknown>,
+) => string;
 
-let initialized = false;
+let _t: TranslateFn = (key) => key;
 
-export function initI18n() {
-	if (initialized || typeof window === "undefined") {
-		return;
-	}
-	initialized = true;
-
-	setupI18nInstance({
-		defaultLanguage: "en",
-		supportedLngs: ["en", "zh", "ja", "ko", "es", "pt", "fr", "de", "id", "vi", "ru", "it"],
-	});
+export function _setGlobalTranslation({
+	t,
+}: {
+	t: TranslateFn;
+}) {
+	_t = t;
 }
+
+export const i18next = {
+	t(key: string, options?: Record<string, unknown>): string {
+		return _t(key, options);
+	},
+};

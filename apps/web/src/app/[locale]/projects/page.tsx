@@ -1,9 +1,8 @@
 "use client";
 
-import { useTranslation } from "@i18next-toolkit/react";
+import { useTranslation } from "@i18next-toolkit/nextjs-approuter";
 import Image from "next/image";
-import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { Link, useRouter } from "@/lib/navigation";
 import type { KeyboardEvent, MouseEvent } from "react";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";

@@ -1,6 +1,6 @@
 "use client";
 
-import { useTranslation } from "@i18next-toolkit/react";
+import { useTranslation } from "@i18next-toolkit/nextjs-approuter";
 import { useCallback, useState } from "react";
 import { PanelBaseView as BaseView } from "@/components/editor/panels/panel-base-view";
 import { Button } from "@/components/ui/button";
@@ -47,8 +47,7 @@ import { CharacterDetailDialog } from "@/components/characters/character-detail"
 import { useCharacterStore } from "@/stores/character-store";
 import type { AICharacter } from "@/types/character";
 import { UserIcon } from "@hugeicons/core-free-icons";
-import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { Link, useRouter } from "@/lib/navigation";
 
 const ASPECT_RATIOS = [
 	{ value: "auto", label: "Auto" },

@@ -1,17 +1,20 @@
-import { ThemeProvider } from "next-themes";
 import Script from "next/script";
 
 import "./globals.css";
-import { Toaster } from "../components/ui/sonner";
-import { TooltipProvider } from "../components/ui/tooltip";
-import { I18nProvider } from "../components/providers/i18n-provider";
 import { baseMetaData } from "./metadata";
 import { BotIdClient } from "botid/client";
 import { Inter } from "next/font/google";
+import {
+	initServerI18n,
+	getLocale,
+} from "@i18next-toolkit/nextjs-approuter/server";
+import { i18nConfig } from "../i18n.config";
 
 const siteFont = Inter({ subsets: ["latin"] });
 
 export const metadata = baseMetaData;
+
+initServerI18n(i18nConfig);
 
 const protectedRoutes = [
 	{
@@ -20,13 +23,15 @@ const protectedRoutes = [
 	},
 ];
 
-export default function RootLayout({
+export default async function RootLayout({
 	children,
 }: Readonly<{
 	children: React.ReactNode;
 }>) {
+	const locale = await getLocale();
+
 	return (
-		<html lang="en" suppressHydrationWarning>
+		<html lang={locale} suppressHydrationWarning>
 			<head>
 				<BotIdClient protect={protectedRoutes} />
 				<Script
@@ -35,18 +40,7 @@ export default function RootLayout({
 				/>
 			</head>
 			<body className={`${siteFont.className} font-sans antialiased`}>
-				<I18nProvider>
-					<ThemeProvider
-						attribute="class"
-						defaultTheme="dark"
-						disableTransitionOnChange={true}
-					>
-						<TooltipProvider>
-							<Toaster />
-							{children}
-						</TooltipProvider>
-					</ThemeProvider>
-				</I18nProvider>
+				{children}
 			</body>
 		</html>
 	);

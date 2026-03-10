@@ -1,7 +1,7 @@
 "use client";
 
 import { ArrowRightIcon } from "lucide-react";
-import { useTranslation } from "@i18next-toolkit/react";
+import { useTranslation } from "@i18next-toolkit/nextjs-approuter";
 import { useState } from "react";
 import ReactMarkdown from "react-markdown";
 import { SOCIAL_LINKS } from "@/constants/site-constants";

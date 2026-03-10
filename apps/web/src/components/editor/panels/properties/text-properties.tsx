@@ -2,7 +2,7 @@
 
 import { Textarea } from "@/components/ui/textarea";
 import { FontPicker } from "@/components/ui/font-picker";
-import { useTranslation } from "@i18next-toolkit/react";
+import { useTranslation } from "@i18next-toolkit/nextjs-approuter";
 import type { FontFamily } from "@/constants/font-constants";
 import type {
 	TextElement,

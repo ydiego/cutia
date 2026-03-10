@@ -2,9 +2,9 @@
 
 import { Button } from "../ui/button";
 import { ArrowRight } from "lucide-react";
-import Link from "next/link";
+import { Link } from "@/lib/navigation";
 import { motion } from "motion/react";
-import { useTranslation } from "@i18next-toolkit/react";
+import { useTranslation } from "@i18next-toolkit/nextjs-approuter";
 
 export function CTASection() {
 	const { t } = useTranslation();

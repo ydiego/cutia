@@ -1,6 +1,6 @@
 "use client";
 
-import { useTranslation } from "@i18next-toolkit/react";
+import { useTranslation } from "@i18next-toolkit/nextjs-approuter";
 import Image from "next/image";
 import { memo, useCallback, useMemo, useState } from "react";
 import { PanelBaseView as BaseView } from "@/components/editor/panels/panel-base-view";

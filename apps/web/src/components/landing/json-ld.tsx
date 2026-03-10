@@ -1,7 +1,7 @@
 "use client";
 
 import { SITE_URL, SOCIAL_LINKS } from "@/constants/site-constants";
-import { useTranslation } from "@i18next-toolkit/react";
+import { useTranslation } from "@i18next-toolkit/nextjs-approuter";
 
 export function useLocalizedFaqItems() {
 	const { t } = useTranslation();

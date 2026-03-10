@@ -1,4 +1,4 @@
-import { useTranslation } from "@i18next-toolkit/react";
+import { useTranslation } from "@i18next-toolkit/nextjs-approuter";
 import { DraggableItem } from "@/components/editor/panels/assets/draggable-item";
 import { PanelBaseView as BaseView } from "@/components/editor/panels/panel-base-view";
 import { useEditor } from "@/hooks/use-editor";

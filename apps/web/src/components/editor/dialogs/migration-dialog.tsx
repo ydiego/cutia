@@ -9,7 +9,7 @@ import {
 } from "@/components/ui/dialog";
 import { useEditor } from "@/hooks/use-editor";
 import { Loader2 } from "lucide-react";
-import { useTranslation } from "@i18next-toolkit/react";
+import { useTranslation } from "@i18next-toolkit/nextjs-approuter";
 
 export function MigrationDialog() {
 	const { t } = useTranslation();

@@ -1,10 +1,10 @@
 "use client";
 
-import Link from "next/link";
+import { Link } from "@/lib/navigation";
 import { FaGithub } from "react-icons/fa6";
 import Image from "next/image";
 import { DEFAULT_LOGO_URL, SOCIAL_LINKS } from "@/constants/site-constants";
-import { useTranslation } from "@i18next-toolkit/react";
+import { useTranslation } from "@i18next-toolkit/nextjs-approuter";
 
 interface FooterLink {
 	label: string;

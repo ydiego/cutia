@@ -1,6 +1,6 @@
 "use client";
 
-import { useTranslation } from "@i18next-toolkit/react";
+import { useTranslation } from "@i18next-toolkit/nextjs-approuter";
 import { useCharacterStore } from "@/stores/character-store";
 import { HugeiconsIcon } from "@hugeicons/react";
 import { Cancel01Icon, UserIcon } from "@hugeicons/core-free-icons";

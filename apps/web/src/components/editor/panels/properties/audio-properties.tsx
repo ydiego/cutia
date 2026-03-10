@@ -3,7 +3,7 @@
 import { Slider } from "@/components/ui/slider";
 import { Input } from "@/components/ui/input";
 import { useReducer, useRef } from "react";
-import { useTranslation } from "@i18next-toolkit/react";
+import { useTranslation } from "@i18next-toolkit/nextjs-approuter";
 import { PanelBaseView } from "@/components/editor/panels/panel-base-view";
 import {
 	PropertyGroup,

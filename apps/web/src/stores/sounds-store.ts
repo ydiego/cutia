@@ -1,4 +1,4 @@
-import { i18next } from "@i18next-toolkit/react";
+import { i18next } from "@/lib/i18n";
 import { create } from "zustand";
 import type { SoundEffect, SavedSound } from "@/types/sounds";
 import { storageService } from "@/services/storage/service";
