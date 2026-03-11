@@ -56,8 +56,10 @@ import { DragLine } from "./drag-line";
 import { invokeAction } from "@/lib/actions";
 import { useTrackReorder } from "@/hooks/timeline/use-track-reorder";
 import { cn } from "@/utils/ui";
+import { useTranslation } from "@i18next-toolkit/nextjs-approuter";
 
 export function Timeline() {
+	const { t } = useTranslation();
 	const tracksContainerHeight = { min: 0, max: 800 };
 	const { snappingEnabled } = useTimelineStore();
 	const { clearElementSelection, setElementSelection } = useElementSelection();
@@ -489,7 +491,7 @@ export function Timeline() {
 															invokeAction("paste-copied");
 														}}
 													>
-														Paste elements
+														{t("Paste elements")}
 													</ContextMenuItem>
 													<ContextMenuItem
 														onClick={(e) => {
@@ -502,8 +504,8 @@ export function Timeline() {
 														<HugeiconsIcon icon={VolumeHighIcon} />
 														<span>
 															{canTracktHaveAudio(track) && track.muted
-																? "Unmute track"
-																: "Mute track"}
+																? t("Unmute track")
+																: t("Mute track")}
 														</span>
 													</ContextMenuItem>
 													<ContextMenuItem
@@ -517,8 +519,8 @@ export function Timeline() {
 														<HugeiconsIcon icon={ViewIcon} />
 														<span>
 															{canTrackBeHidden(track) && track.hidden
-																? "Show track"
-																: "Hide track"}
+																? t("Show track")
+																: t("Hide track")}
 														</span>
 													</ContextMenuItem>
 													<ContextMenuItem
@@ -532,7 +534,7 @@ export function Timeline() {
 														disabled={isMainTrack(track)}
 													>
 														<HugeiconsIcon icon={Delete02Icon} />
-														Delete track
+														{t("Delete track")}
 													</ContextMenuItem>
 												</ContextMenuContent>
 											</ContextMenu>
