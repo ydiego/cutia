@@ -31,6 +31,9 @@ COPY --from=build /app/apps/web/public ./apps/web/public
 COPY --from=build --chown=nextjs:nodejs /app/apps/web/.next/standalone ./
 COPY --from=build --chown=nextjs:nodejs /app/apps/web/.next/static ./apps/web/.next/static
 
+# i18n: loadMessages resolves localeDir relative to process.cwd() (/app)
+COPY --from=build /app/apps/web/public/locales ./public/locales
+
 USER nextjs
 
 EXPOSE 3000

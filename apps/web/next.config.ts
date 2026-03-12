@@ -8,6 +8,9 @@ const nextConfig: NextConfig = {
   reactStrictMode: true,
   productionBrowserSourceMaps: true,
   output: "standalone",
+  outputFileTracingIncludes: {
+    "/**": ["./public/locales/**/*"],
+  },
   images: {
     remotePatterns: [
       {
